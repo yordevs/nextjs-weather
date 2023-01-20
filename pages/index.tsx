@@ -1,5 +1,3 @@
-//write a nextjs app with styled components and typescript to show the whether in a location inputted by the user from openweathermap api
-
 import React, { useState } from "react";
 import Head from "next/head";
 import styled from "styled-components";
@@ -42,13 +40,16 @@ const IndexPage = () => {
 
   const getWeather = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (city === "" || city === undefined) {
+      setError("Please enter a city");
+      return;
+    }
+    setForecast({});
+    setWeather({});
     setError("");
-    const forecastResponse = fetch(
-      `http://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&APPID=19bf94858624d4346e3ce37140858733`
-    );
-    const weatherResponse = fetch(
-      `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=19bf94858624d4346e3ce37140858733`
-    );
+
+    const forecastResponse = fetch(`/api/forecast/${city}`);
+    const weatherResponse = fetch(`/api/weather/${city}`);
 
     Promise.all([forecastResponse, weatherResponse])
       .then((values) => {
